@@ -19,7 +19,7 @@ const Hero = () => {
             Procure<span className='text-[#915EFF]'>Net</span>
           </h1>
           <p className={`${styles.heroSubText} mt-2 text-white-100`}>
-          {/* Best Online Auction Site Providing 100% Reliable  <br className='sm:block hidden' />and Secured Auctioning-Bidding Servicesinterfaces and web applications */}
+          Best Online Auction Site Providing 100% Reliable  <br className='sm:block hidden' />and Secured Auctioning-Bidding Servicesinterfaces and web applications
           </p>
         </div>
       </div>
