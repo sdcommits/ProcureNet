@@ -1,0 +1,79 @@
+/* Main container for Forgot Password */
+.forgot_password_container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #001f3f; /* Dark Blue */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Form container */
+.forgot_password_form_container {
+  width: 500px;
+  padding: 40px;
+  background-color: #f5e8c7; /* Light Gold/Cream */
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1), 0px 8px 20px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  text-align: center;
+}
+
+/* Header styling */
+.header {
+  font-size: 35px;
+  margin-bottom: 20px;
+  color: #001f3f; /* Dark Blue */
+}
+
+/* Input fields */
+.input {
+  outline: none;
+  border: none;
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: white;
+  margin: 20px 0;
+  font-size: 14px;
+  color: black;
+}
+
+/* Message styling */
+.message {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #001f3f; /* Dark Blue */
+}
+
+/* Submit button */
+.submit_btn {
+  padding: 12px 25px;
+  background-color: #001f3f; /* Dark Blue */
+  color: black;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  font-size: 16px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Hover effect for Submit button */
+.submit_btn:hover {
+  background-color: #004080; 
+  color:white;/* Lighter Blue */
+}
+
+/* Link to go back to Login */
+.back_to_login_link {
+  margin-top: 10px;
+  display: block;
+  color: #001f3f; /* Dark Blue */
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* Hover effect for link */
+.back_to_login_link:hover {
+  text-decoration: underline;
+}

@@ -45,22 +45,30 @@ export const navLinks = [
 
 const services = [
   {
-    title: "Tender-Live",
-    icon: starbucks,
+    title: "Tenders-Live",
+    icon: starbucks, // Replace with the correct icon
+    path: "/tenders-live", // Path to TendersLive component
   },
   {
-    title: "Winnning-Percent",
-    icon: starbucks,
+    title: "Create-Room",
+    icon: starbucks, // Replace with the correct icon
+    path: "/create-room",
+     // Path to CreateRoom component
+    
+    
   },
   {
-    title: "Live-Products",
-    icon: starbucks,
+    title: "PRODUCTS",
+    icon: starbucks, // Replace with the correct icon
+    path: "/add-product", // Path to AddProduct component
   },
   {
-    title: "E-Auction",
-    icon: starbucks,
+    title: "Join-Room",
+    icon: starbucks, // Replace with the correct icon
+    path: "/join-room", // Path to JoinRoom component
   },
 ];
+
 // const technologies = [
 //   {
 //     name: "HTML 5",

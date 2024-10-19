@@ -1,0 +1,133 @@
+/* Main container for the signup */
+.signup_container {
+	width: 100%;
+	min-height: 100vh;
+	background-color: #001f3f; /* Dark Blue */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+  }
+  
+  /* Form container with white border and shadow effect */
+  .signup_form_container {
+	width: 1200px;
+	height: 600px;
+	display: flex;
+	border-radius: 10px;
+	border: 3px solid white;  /* White border */
+	box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1), 0px 8px 20px rgba(0, 0, 0, 0.2);  /* Shadow effect */
+  }
+  
+  .left {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: #001f3f; /* Dark Blue */
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+  }
+  
+  .left h1 {
+	margin-top: 0;
+	color: #f5e8c7;  /* Cream color */
+	font-size: 35px;
+	align-self: center;
+  }
+  
+  .right {
+	flex: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: #f5e8c7; /* Light Gold/Cream */
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+  }
+  
+  .form_container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  }
+  
+  .form_container h1 {
+	font-size: 40px;
+	margin-top: 0;
+	color: #001f3f;  /* Dark Blue */
+  }
+  
+  /* Input fields */
+  .input {
+	outline: none;
+	border: none;
+	width: 370px;
+	padding: 15px;
+	border-radius: 10px;
+	background-color: white;
+	margin: 5px 0;
+	font-size: 14px;
+	color: black;
+  }
+  
+  /* Placeholder text color */
+  .input::placeholder {
+	color: black;
+	opacity: 1;
+  }
+  
+  /* Error message */
+  .error_msg {
+	width: 370px;
+	padding: 15px;
+	margin: 5px 0;
+	font-size: 14px;
+	background-color: #f34646;
+	color: white;
+	border-radius: 5px;
+	text-align: center;
+  }
+  
+  /* Submit Button */
+  .submit_btn {
+	padding: 12px 25px;
+	background-color: #f5e8c7; /* Light Gold/Cream */
+	color: #001f3f;  /* Dark Blue */
+	border-radius: 25px;
+	font-weight: bold;
+	cursor: pointer;
+	border: none;
+	font-size: 16px;
+	transition: background-color 0.3s ease-in-out;
+	margin-top: 20px;
+  }
+  
+  /* Hover effect for Submit button */
+  .submit_btn:hover {
+	background-color: white;
+	color: #001f3f;
+  }
+  
+  /* Sign In button */
+  .white_btn {
+	padding: 12px 25px;
+	background-color: #f5e8c7; /* Light Gold/Cream */
+	color: #f5e8c7;
+	border: 2px solid #f5e8c7;
+	border-radius: 25px;
+	font-weight: bold;
+	cursor: pointer;
+	font-size: 16px;
+	transition: all 0.3s ease-in-out;
+	margin-top: 20px;
+  }
+  
+  /* Hover effect for Sign In button */
+  .white_btn:hover {
+	background-color: white;
+	color: #001f3f;
+	border: 2px solid #f5e8c7;
+  }
+  
