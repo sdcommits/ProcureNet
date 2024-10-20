@@ -39,7 +39,7 @@ const App = () => {
             </>
           }
         />
-
+        <Route path="/" element={<About />} />
         {/* Signup page */}
         <Route path="/signup" element={<Signup />} />
 
@@ -49,10 +49,9 @@ const App = () => {
         {/* Forgot Password page */}
         <Route path="/forgotpassword" element={<ForgotPassword />} /> {/* Added this route */}
 
-        <Route path="/create-room" element={<CreateRoom />} />
-        
-
+        {/* <Route path="/create-room" element={<CreateRoom />} /> */}
         {/* <Route path="/join-room" element={<JoinRoom />} /> */}
+        <Route path="/services/:serviceName" element={<CreateRoom />} />
         
       </Routes>
     </BrowserRouter>

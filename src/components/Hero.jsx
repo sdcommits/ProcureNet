@@ -35,7 +35,7 @@ const Hero = () => {
       </div>
 
       {/* Create Room Link Section */}
-      <div className='absolute bottom-20 left-0 right-0 flex justify-center items-center'>
+      {/* <div className='absolute bottom-20 left-0 right-0 flex justify-center items-center'>
         <Link to="/create-room">
           <div className="icon-text flex flex-col items-center cursor-pointer">
             <img
@@ -47,7 +47,7 @@ const Hero = () => {
             <p className="text-white">Create Room</p>
           </div>
         </Link>
-      </div>
+      </div> */}
     </section>
   );
 };
