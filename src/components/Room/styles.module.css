@@ -1,0 +1,115 @@
+.container {
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+    font-family: 'Arial', sans-serif; /* Use a clean, readable font */
+}
+
+.header {
+    text-align: center;
+    color: #333; /* Darker text color for the header */
+    margin-bottom: 20px;
+}
+
+.roomInfo {
+    background-color: #f8f9fa; /* Light grey background for room info */
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.infoBox {
+    color: #495057; /* Darker grey for the info box text */
+    font-weight: bold;
+}
+
+.currentBid {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #007bff; /* Blue border for current bid section */
+    border-radius: 5px;
+    background-color: #e9f7ff; /* Light blue background */
+    color: #007bff; /* Blue color for the text */
+}
+
+.userTable {
+    background-color: #f1f1f1; /* Light background for user table */
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 20px; /* Added margin to separate from other sections */
+}
+
+.userTable h3 {
+    color: #333; /* Dark color for the user table heading */
+    margin-bottom: 10px; /* Space below heading */
+}
+
+.userTable ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+    margin: 0; /* Ensure no default margin */
+}
+
+.userTable li {
+    padding: 5px 0;
+    color: #666; /* Grey color for user names */
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+.userTable li:hover {
+    color: #007bff; /* Change color on hover */
+}
+
+.footer {
+    text-align: center;
+    font-size: 1.2em;
+    color: #495057; /* Darker grey for footer text */
+    margin-top: 20px; /* Space above footer */
+}
+
+.placeBid {
+    text-align: center;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between input and button */
+}
+
+.placeBid input[type="text"],
+.placeBid input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.placeBid button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.placeBid button:hover {
+    background-color: #0056b3;
+}
+
+.winnerBox {
+    background-color: #e9f7ff;
+    color: #007bff;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    margin-top: 20px;
+}
