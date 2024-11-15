@@ -41,16 +41,12 @@ const App = () => {
         {/* Signup page */}
         <Route path="/signup" element={<Signup />} />
 
-        {/* Login page */}
         <Route path="/login" element={<Login />} />
 
-        {/* Forgot Password page */}
         <Route path="/forgotpassword" element={<ForgotPassword />} />
 
-        {/* Create Auction Room page */}
         <Route path="/create-room" element={<CreateRoom />} />
 
-        {/* Add Product page */}
         <Route path="/add-product" element={<AddProduct />} /> {/* Add this route */}
         
         <Route path="/room/:roomId" element={<Room />} /> {/* Room page route */}
@@ -61,6 +57,11 @@ const App = () => {
 
         {/* Dynamic Service Page */}
         <Route path="/services/:serviceName" element={<CreateRoom />} />
+{/* 
+       <Route path="/tenders-live" element={<TendersLive />} />
+        <Route path="/create-room" element={<CreateRoom />} />
+        <Route path="/add-product" element={<AddProduct />} />
+        <Route path="/join-room" element={<JoinRoom />} /> */}
       </Routes>
     </BrowserRouter>
   );
