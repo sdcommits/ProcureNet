@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "./styles.module.css"; // Import the Add Product styles module
+import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -22,34 +22,46 @@ const AddProduct = () => {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData((prev) => ({ ...prev, image: reader.result }));
-    };
     if (file) {
-      reader.readAsDataURL(file); // Read the image file
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/add-product", formData);
+      const response = await axios.post("http://localhost:8080/api/add-product", formData, {
+        headers: { "Content-Type": "application/json" },
+      });
       alert("Product added successfully!");
-      navigate("/create-room"); // Redirect to Create Room after adding product
+
+      // Save the full product object to localStorage
+      const currentProducts = JSON.parse(localStorage.getItem("products")) || [];
+      localStorage.setItem("products", JSON.stringify([...currentProducts, formData]));
+
+      navigate("/create-room");
     } catch (error) {
       console.error("Error adding product:", error.response?.data || error.message);
+      alert("There was an issue adding the product. Please try again.");
     }
   };
 
   return (
     <div className={styles.add_product_container}>
       <h1 className={styles.header}>Add Product</h1>
-      <div className={styles.form_container}>
+      <form onSubmit={handleSubmit} className={styles.form_container}>
         <div className={styles.image_upload_container}>
           <div className={styles.image_preview}>
             {formData.image ? (
-              <img src={formData.image} alt="Product Preview" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+              <img
+                src={formData.image}
+                alt="Product Preview"
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              />
             ) : (
               "No Image Selected"
             )}
@@ -114,7 +126,7 @@ const AddProduct = () => {
             Add Product
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./styles.module.css";
@@ -15,11 +15,22 @@ const CreateAuctionRoom = () => {
     room_password: "",
   });
 
-  const [productName, setProductName] = useState("");
-  const [products, setProducts] = useState([]); // Array to store added products
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false); // Loading state to prevent multiple submits
   const navigate = useNavigate();
 
-  // Handle form field changes
+  useEffect(() => {
+    // Load products from localStorage
+    const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
+    setProducts(storedProducts);
+
+    // Load form data from localStorage if available
+    const savedFormData = JSON.parse(localStorage.getItem("createAuctionRoomData"));
+    if (savedFormData) {
+      setFormData(savedFormData);
+    }
+  }, []);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -27,40 +38,45 @@ const CreateAuctionRoom = () => {
     });
   };
 
-  // Handle individual product name input change
-  const handleProductChange = (e) => {
-    setProductName(e.target.value);
-  };
-
-  // Add product to the list
   const handleAddProduct = () => {
-    if (productName && !products.includes(productName)) { // Avoid duplicates
-      setProducts([...products, productName]);
-      setProductName(""); // Clear input after adding
-    }
+    // Save current form data to localStorage before navigating
+    localStorage.setItem("createAuctionRoomData", JSON.stringify(formData));
+    navigate("/add-product");
   };
 
-  // Submit form data and products to the backend
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading state to true before making the API call
+
     try {
       const response = await axios.post("http://localhost:8080/api/auction/create-room", {
         ...formData,
-        products, // Include added products in the request
+        products,
       });
-      alert("Auction Room Created Successfully!");
-      console.log(response.data);
 
-      // Redirect to the room page if creation is successful
-      const room_Id = response.data.auctionRoom.room_Id; // Adjusted to room_Id
-      navigate(`/room/${room_Id}`);
-    } catch (error) {
-      if (error.response) {
-        console.error("Backend error:", error.response.data);
-        alert("Error creating room: " + error.response.data.message);
+      console.log("Response from backend:", response);
+
+      // Check if response contains the room ID
+      if (response && response.data && response.data.auctionRoom) {
+        const room_Id = response.data.room_Id;
+
+        if (room_Id) {
+          alert("Auction Room Created Successfully!");
+          localStorage.removeItem("products");
+          localStorage.removeItem("createAuctionRoomData"); // Clear form data on successful creation
+
+          navigate(`/room/${room_Id}`);
+        } else {
+          alert("Room ID not found in response!");
+        }
       } else {
-        console.error("Error:", error.message);
+        alert("Failed to create auction room. Please try again.");
       }
+    } catch (error) {
+      console.error("Error creating room:", error.response?.data?.message || error.message);
+      alert("Error creating room. Please try again.");
+    } finally {
+      setLoading(false); // Reset loading state after the request is completed
     }
   };
 
@@ -76,8 +92,8 @@ const CreateAuctionRoom = () => {
       <div className={styles.create_room_container}>
         <h1 className={styles.header}>Create Auction Room</h1>
         <form onSubmit={handleSubmit} className={styles.form_container}>
+          {/* Auction Type and Number of Members */}
           <div className={styles.input_group}>
-            {/* Auction Type */}
             <div className={styles.input_container}>
               <label>
                 Auction Type:
@@ -95,7 +111,6 @@ const CreateAuctionRoom = () => {
               </label>
             </div>
 
-            {/* Number of Members */}
             <div className={styles.input_container}>
               <label>
                 Number of Members:
@@ -112,8 +127,8 @@ const CreateAuctionRoom = () => {
             </div>
           </div>
 
+          {/* Registration Number and Time Limit */}
           <div className={styles.input_group}>
-            {/* Registration Number */}
             <div className={styles.input_container}>
               <label>
                 Registration Number:
@@ -128,7 +143,6 @@ const CreateAuctionRoom = () => {
               </label>
             </div>
 
-            {/* Time Limit */}
             <div className={styles.input_container}>
               <label>
                 Time Limit (seconds):
@@ -144,8 +158,8 @@ const CreateAuctionRoom = () => {
             </div>
           </div>
 
+          {/* Minimum Bid Increment and Start Time */}
           <div className={styles.input_group}>
-            {/* Minimum Bid Increment */}
             <div className={styles.input_container}>
               <label>
                 Minimum Bid Increment:
@@ -160,7 +174,6 @@ const CreateAuctionRoom = () => {
               </label>
             </div>
 
-            {/* Start Time */}
             <div className={styles.input_container}>
               <label>
                 Start Time:
@@ -176,8 +189,8 @@ const CreateAuctionRoom = () => {
             </div>
           </div>
 
+          {/* Room Password */}
           <div className={styles.input_group}>
-            {/* Create Password */}
             <div className={styles.input_container}>
               <label>
                 Create Password:
@@ -195,15 +208,6 @@ const CreateAuctionRoom = () => {
 
           {/* Add Product Section */}
           <div className={styles.product_input_container}>
-            <label>
-              Add Product:
-              <input
-                type="text"
-                value={productName}
-                onChange={handleProductChange}
-                className={styles.input}
-              />
-            </label>
             <button type="button" className={styles.add_product_btn} onClick={handleAddProduct}>
               Add Product
             </button>
@@ -215,16 +219,16 @@ const CreateAuctionRoom = () => {
               <h3>Added Products:</h3>
               <ul>
                 {products.map((product, index) => (
-                  <li key={index}>{product}</li>
+                  <li key={index}>{product.title}</li>
                 ))}
               </ul>
             </div>
           )}
 
-          {/* Center the Create Room button */}
+          {/* Create Room Button */}
           <div className={styles.submit_btn_container}>
-            <button type="submit" className={styles.submit_btn}>
-              Create Room
+            <button type="submit" className={styles.submit_btn} disabled={loading}>
+              {loading ? "Creating Room..." : "Create Room"}
             </button>
           </div>
         </form>

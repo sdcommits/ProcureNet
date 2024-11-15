@@ -1,115 +1,130 @@
 .container {
-    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    margin: 20px auto;
-    font-family: 'Arial', sans-serif; /* Use a clean, readable font */
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    color: #fff;
+    position: relative;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
-.header {
-    text-align: center;
-    color: #333; /* Darker text color for the header */
-    margin-bottom: 20px;
+.tagline {
+    position: absolute;
+    top: 20px;
+    font-size: 36px;
+    font-family: "Courier New", Courier, monospace;
+    color: #FFD700;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    animation: fadeIn 1.5s ease-in-out;
 }
 
 .roomInfo {
-    background-color: #f8f9fa; /* Light grey background for room info */
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 80px;
+    left: 50px;
+    font-size: 24px;
+    font-family: "Courier New", Courier, monospace;
+    color: #fff;
+    transition: transform 0.2s;
+}
+.roomInfo:hover {
+    transform: scale(1.05);
 }
 
-.infoBox {
-    color: #495057; /* Darker grey for the info box text */
-    font-weight: bold;
+.timer {
+    position: absolute;
+    bottom: 100px;
+    left: 50px;
+    font-size: 30px;
+    color: #fff;
+    transition: transform 0.2s;
+}
+.timer:hover {
+    transform: scale(1.05);
 }
 
-.currentBid {
+.bidSection {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
-    margin: 20px 0;
-    padding: 15px;
-    border: 1px solid #007bff; /* Blue border for current bid section */
-    border-radius: 5px;
-    background-color: #e9f7ff; /* Light blue background */
-    color: #007bff; /* Blue color for the text */
+    font-size: 30px;
+    transition: transform 0.2s;
+}
+.bidSection:hover {
+    transform: scale(1.05);
 }
 
-.userTable {
-    background-color: #f1f1f1; /* Light background for user table */
-    border-radius: 5px;
-    padding: 15px;
-    margin-top: 20px; /* Added margin to separate from other sections */
-}
-
-.userTable h3 {
-    color: #333; /* Dark color for the user table heading */
-    margin-bottom: 10px; /* Space below heading */
-}
-
-.userTable ul {
-    list-style-type: none; /* Remove bullet points */
-    padding: 0;
-    margin: 0; /* Ensure no default margin */
-}
-
-.userTable li {
-    padding: 5px 0;
-    color: #666; /* Grey color for user names */
-    transition: color 0.3s; /* Smooth color transition */
-}
-
-.userTable li:hover {
-    color: #007bff; /* Change color on hover */
-}
-
-.footer {
+.bidSection input {
+    padding: 10px;
+    font-size: 18px;
     text-align: center;
-    font-size: 1.2em;
-    color: #495057; /* Darker grey for footer text */
-    margin-top: 20px; /* Space above footer */
+    width: 200px;
+    margin-top: 10px;
 }
 
-.placeBid {
-    text-align: center;
-    margin: 20px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Space between input and button */
-}
-
-.placeBid input[type="text"],
-.placeBid input[type="number"] {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 200px;
-    margin: 0 auto;
-}
-
-.placeBid button {
+.bidSection button {
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
+    font-size: 18px;
+    background-color: #4e73df;
+    color: #fff;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.placeBid button:hover {
-    background-color: #0056b3;
-}
-
-.winnerBox {
-    background-color: #e9f7ff;
-    color: #007bff;
-    text-align: center;
-    padding: 20px;
-    border: 1px solid #007bff;
     border-radius: 5px;
+    margin-top: 10px;
+}
+.bidSection button:hover {
+    background-color: #375a7f;
+}
+
+.productBox {
+    width: 400px;
+    height: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #000;
+    font-family: Arial, sans-serif;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+.productBox:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5);
+}
+
+.joinedUsers {
+    position: absolute;
+    right: 100px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    color: #fff;
+    text-align: center;
+    transition: transform 0.2s;
+}
+.joinedUsers:hover {
+    transform: scale(1.05);
+}
+
+.auctionEnded {
+    font-size: 24px;
+    color: red;
+    font-weight: bold;
     margin-top: 20px;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
 }

@@ -19,14 +19,14 @@ async function generateUniqueRoomId() {
 exports.createAuctionRoom = async (req, res) => {
     try {
         // Generate and set a unique room ID
-        req.body.room_Id = await generateUniqueRoomId();
-        console.log("Generated Room ID:", req.body.room_Id);
+        req.body.roomCode = await generateUniqueRoomId();
+        console.log("Generated Room ID:", req.body.roomCode);
 
         // Create the auction room
         const auctionRoom = new AuctionRoom(req.body);
         await auctionRoom.save();
         
-        res.status(201).json({ message: 'Auction room created successfully', auctionRoom });
+        res.status(201).json({ message: 'Auction room created successfully', auctionRoom ,room_Id: auctionRoom.roomCode});
     } catch (error) {
         console.error("Error creating auction room:", error);
         res.status(400).json({ error: error.message });
@@ -46,7 +46,9 @@ exports.getAuctionRooms = async (req, res) => {
 // Get a single auction room by ID
 exports.getAuctionRoomById = async (req, res) => {
     try {
-        const auctionRoom = await AuctionRoom.findOne({ roomCode: req.params.roomCode });
+        const auctionRoom = await AuctionRoom.findOne({ roomCode: req.params.roomCode }).select("+room_password");
+
+        console.log(auctionRoom.room_password);
         if (!auctionRoom) {
             return res.status(404).json({ message: "Auction room not found" });
         }

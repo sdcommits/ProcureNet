@@ -7,6 +7,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import CreateRoom from "./components/Create-Room";
 import AddProduct from "./components/AddProduct"; // Import AddProduct component
 import Room from "./components/Room";
+import JoinRoom from  "./components/Join-Room";
 
 const App = () => {
   const user = localStorage.getItem("token");
@@ -50,9 +51,13 @@ const App = () => {
         <Route path="/create-room" element={<CreateRoom />} />
 
         {/* Add Product page */}
-        <Route path="/addproduct" element={<AddProduct />} /> {/* Add this route */}
+        <Route path="/add-product" element={<AddProduct />} /> {/* Add this route */}
         
         <Route path="/room/:roomId" element={<Room />} /> {/* Room page route */}
+
+        <Route path="/Join-Room" element={<Room />} /> {/* Room page route */}
+
+        
 
         {/* Dynamic Service Page */}
         <Route path="/services/:serviceName" element={<CreateRoom />} />

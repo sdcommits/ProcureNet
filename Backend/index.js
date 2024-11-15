@@ -5,6 +5,7 @@ const main = require('./db');
 const registerRouter = require('./routes/user.registerRoute');
 const loginRouter = require('./routes/user.loginRoute');
 const auctionRoomRoutes = require('./routes/auctionRoomRoute');
+const productRoutes = require('./routes/productRoutes'); 
 const http = require('http');
 const WebSocket = require('ws');
 
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use('/api/auction', auctionRoomRoutes); 
 app.use('/login', loginRouter);
 app.use('/signup', registerRouter);
+app.use('/api', productRoutes);
 
 // Basic route to verify server is running
 app.get('/', (req, res) => {

@@ -36,11 +36,11 @@ const productSchema = new mongoose.Schema({
         min: 0,
     },
   
-    seller: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-    },
+    // seller: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User',
+    //     required: true,
+    // },
     status: {
         type: String,
         required: true,

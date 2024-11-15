@@ -37,7 +37,7 @@ const auctionRoomSchema = new mongoose.Schema({
     },
     roomCode: {
         type: String,
-        
+        required:true,
         unique: true,
     },
     winner: {
