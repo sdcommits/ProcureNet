@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
+import herobg from "../../assets/herobg.png"; // Import the background image
 
 const Login = () => {
   const [data, setData] = useState({
@@ -17,23 +18,30 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:8080/api/auth";
+      const url = "http://localhost:8080/login";
       const { data: res } = await axios.post(url, data);
-      localStorage.setItem("token", res.data);
-      window.location = "/";
+      localStorage.setItem("token", res.data); // Save token
+      window.location.href = "/"; // Redirect to homepage
     } catch (error) {
       if (
         error.response &&
         error.response.status >= 400 &&
         error.response.status <= 500
       ) {
-        setError(error.response.data.message);
+        setError(error.response.data.message); // Show error message
       }
     }
   };
 
   return (
-    <div className={styles.login_container}>
+    <div
+      className={styles.login_container}
+      style={{
+        backgroundImage: `url(${herobg})`, // Set the background image
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className={styles.login_form_container}>
         <div className={styles.left}>
           <form className={styles.form_container} onSubmit={handleSubmit}>
@@ -81,12 +89,17 @@ const Login = () => {
           </form>
         </div>
         <div className={styles.right}>
-          <h1 className={styles.new_here}>New Here?</h1>
-          <Link to="/signup">
-            <button type="button" className={styles.signup_btn}>
-              Sign Up
-            </button>
-          </Link>
+          <div className={styles.new_here_container}> {/* Container for "New Here?" and button */}  
+            <div className={styles.vertical_line}></div> {/* Vertical line */}
+            <div className={styles.text_container}> {/* Text and button aligned vertically */}
+              <h1 className={styles.new_here}>New Here?</h1>
+              <Link to="/signup">
+                <button type="button" className={styles.signup_btn}>
+                  Sign Up
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -94,4 +107,3 @@ const Login = () => {
 };
 
 export default Login;
-

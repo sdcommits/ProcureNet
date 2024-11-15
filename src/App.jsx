@@ -3,13 +3,11 @@ import { About, Contact, Experience, Feedbacks, Hero, Navbar, Tech, Works } from
 import Main from "./components/Main";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
-import ForgotPassword from "./components/ForgotPassword"; // Import the ForgotPassword component
+import ForgotPassword from "./components/ForgotPassword";
 import CreateRoom from "./components/Create-Room";
-// import ServicesList from "./components/ServicesList"; // Adjust the path as needed
-
-// import JoinRoom from "./components/Join-Room";
-// import TendersLive from "./components/TendersLive";
-// import HomePage from "./components/HomePage";
+import AddProduct from "./components/AddProduct"; // Import AddProduct component
+import Room from "./components/Room";
+import JoinRoom from  "./components/Join-Room";
 
 const App = () => {
   const user = localStorage.getItem("token");
@@ -39,7 +37,7 @@ const App = () => {
             </>
           }
         />
-        <Route path="/" element={<About />} />
+        
         {/* Signup page */}
         <Route path="/signup" element={<Signup />} />
 
@@ -47,12 +45,22 @@ const App = () => {
         <Route path="/login" element={<Login />} />
 
         {/* Forgot Password page */}
-        <Route path="/forgotpassword" element={<ForgotPassword />} /> {/* Added this route */}
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
 
-        {/* <Route path="/create-room" element={<CreateRoom />} /> */}
-        {/* <Route path="/join-room" element={<JoinRoom />} /> */}
-        <Route path="/services/:serviceName" element={<CreateRoom />} />
+        {/* Create Auction Room page */}
+        <Route path="/create-room" element={<CreateRoom />} />
+
+        {/* Add Product page */}
+        <Route path="/add-product" element={<AddProduct />} /> {/* Add this route */}
         
+        <Route path="/room/:roomId" element={<Room />} /> {/* Room page route */}
+
+        <Route path="/Join-Room" element={<Room />} /> {/* Room page route */}
+
+        
+
+        {/* Dynamic Service Page */}
+        <Route path="/services/:serviceName" element={<CreateRoom />} />
       </Routes>
     </BrowserRouter>
   );

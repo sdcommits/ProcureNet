@@ -1,0 +1,105 @@
+/* Main container with background image */
+.add_product_container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('../../assets/herobg.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Form container */
+.form_container {
+  width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(22, 17, 48, 0.6);
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1), 0px 8px 20px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(0, 128, 0, 0.8);
+}
+
+/* Header */
+.header {
+  font-size: 28px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* Image upload container */
+.image_upload_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.image_preview {
+  width: 150px;
+  height: 150px;
+  border: 2px solid #dee5ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dee5ed;
+  margin-bottom: 10px;
+}
+
+.upload_btn {
+  padding: 10px;
+  background-color: rgba(22, 16, 53, 0.6);
+  color: #dfe4e9;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload_btn:hover {
+  background-color: white;
+  color: #001f3f;
+}
+
+/* Input fields container */
+.input_fields_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center-align the input fields */
+}
+
+.input {
+  outline: none;
+  border: 2px solid #001f3f; /* Dark blue */
+  width: 60%; /* 60% width for input fields */
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #dee5ed;
+  background-color: rgba(22, 16, 53, 0.6);
+  margin-bottom: 15px; /* Space between input fields */
+}
+
+
+/* Submit button */
+.submit_btn {
+  padding: 12px 20px;
+  background-color: #f5e8c7;
+  color: #001f3f;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 60%;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.submit_btn:hover {
+  background-color: white;
+  color: #001f3f;
+}

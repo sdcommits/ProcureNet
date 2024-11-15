@@ -1,0 +1,130 @@
+.container {
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    color: #fff;
+    position: relative;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.tagline {
+    position: absolute;
+    top: 20px;
+    font-size: 36px;
+    font-family: "Courier New", Courier, monospace;
+    color: #FFD700;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.roomInfo {
+    position: absolute;
+    top: 80px;
+    left: 50px;
+    font-size: 24px;
+    font-family: "Courier New", Courier, monospace;
+    color: #fff;
+    transition: transform 0.2s;
+}
+.roomInfo:hover {
+    transform: scale(1.05);
+}
+
+.timer {
+    position: absolute;
+    bottom: 100px;
+    left: 50px;
+    font-size: 30px;
+    color: #fff;
+    transition: transform 0.2s;
+}
+.timer:hover {
+    transform: scale(1.05);
+}
+
+.bidSection {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 30px;
+    transition: transform 0.2s;
+}
+.bidSection:hover {
+    transform: scale(1.05);
+}
+
+.bidSection input {
+    padding: 10px;
+    font-size: 18px;
+    text-align: center;
+    width: 200px;
+    margin-top: 10px;
+}
+
+.bidSection button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #4e73df;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+.bidSection button:hover {
+    background-color: #375a7f;
+}
+
+.productBox {
+    width: 400px;
+    height: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #000;
+    font-family: Arial, sans-serif;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+.productBox:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5);
+}
+
+.joinedUsers {
+    position: absolute;
+    right: 100px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    color: #fff;
+    text-align: center;
+    transition: transform 0.2s;
+}
+.joinedUsers:hover {
+    transform: scale(1.05);
+}
+
+.auctionEnded {
+    font-size: 24px;
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
