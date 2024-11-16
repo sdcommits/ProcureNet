@@ -27,9 +27,16 @@ const ServiceCard = ({ index, title, icon }) => {
           <img src={icon} alt={title} className="w-16 h-16 object-contain" />
 
           <h3 className="text-white text-[20px] font-bold text-center">
+          <h3 className="text-white text-[20px] font-bold text-center">
             {title}
           </h3>
 
+          <button
+            className="mt-4 bg-transparent border border-blue-500 py-2 px-4 text-lg rounded-lg hover:bg-[#4b2b8f] hover:text-white transition"
+            onClick={handleButtonClick}
+          >
+            View Details
+          </button>
           <button
             className="mt-4 bg-transparent border border-blue-500 py-2 px-4 text-lg rounded-lg hover:bg-[#4b2b8f] hover:text-white transition"
             onClick={handleButtonClick}
@@ -41,5 +48,6 @@ const ServiceCard = ({ index, title, icon }) => {
     </Tilt>
   );
 };
+//pk
 
 export default ServiceCard;

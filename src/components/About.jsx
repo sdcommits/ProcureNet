@@ -28,14 +28,14 @@ const About = () => {
         today to explore endless opportunities.
       </motion.p>
 
-      {/* Services Section */}
-      <div className="mt-20 flex flex-wrap gap-10">
+      <div className='mt-20 flex flex-wrap gap-10'>
+        {/* Map through services and render ServiceCard for each */}
         {services.map((service, index) => (
           <ServiceCard
-            key={service.title} // Unique key for each service card
-            index={index} // Index to control animation delay
-            title={service.title} // Title of the service
-            icon={service.icon} // Icon for the service
+            key={service.title}
+            index={index}
+            title={service.title}
+            icon={service.icon}
           />
         ))}
       </div>

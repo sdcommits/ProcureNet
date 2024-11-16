@@ -44,10 +44,8 @@ const App = () => {
         {/* Signup page */}
         <Route path="/signup" element={<Signup />} />
 
-        {/* Login page */}
         <Route path="/login" element={<Login />} />
 
-        {/* Forgot Password page */}
         <Route path="/forgotpassword" element={<ForgotPassword />} />
 
         {/* Add Product page */}
