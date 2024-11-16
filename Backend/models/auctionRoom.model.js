@@ -14,7 +14,7 @@ const auctionRoomSchema = new mongoose.Schema({
     registration_Number: {
         type: String,
         required: true,
-        unique: true, 
+        
     },
     timelimit: {
         type: Number,

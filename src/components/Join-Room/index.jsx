@@ -1,76 +1,55 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./JoinRoom.css"; // Import the updated CSS file
-import herobg from "../../assets/herobg.png";
+'use client'
 
-const JoinRoom = () => {
-  const [roomCode, setRoomCode] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+import { useState } from 'react'
+import styles from './styles.module.css'
+
+export default function JoinRoom() {
+  const [roomCode, setRoomCode] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(null)
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null); // Reset error state
+    e.preventDefault()
+    setError(null)
 
-    try {
-      // Backend API call for room validation
-      const response = await axios.post("/api/auction/join", { roomCode, password });
+    // Simulating API call
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
-      if (response.data.success) {
-        navigate(`/auction-room/${roomCode}`);
-      } else {
-        setError(response.data.message || "Invalid room code or password");
-      }
-    } catch (err) {
-      setError("Error joining the room. Please try again later.");
-      console.error(err);
-    }
-  };
+    // For demonstration, always show error
+    setError('Invalid room code or password')
+  }
 
-  return (
-    <div
-      className="room_container"
-      style={{
-        backgroundImage: `url(${herobg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="join-room-container">
-        <h2>Join Auction Room</h2>
-        <form className="join-room-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="roomCode">Room Code</label>
-            <input
-              type="text"
-              id="roomCode"
-              value={roomCode}
-              onChange={(e) => setRoomCode(e.target.value)}
-              required
-              placeholder="Enter Room Code"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Enter Room Password"
-            />
-          </div>
-          <button className="join-room-button" type="submit">
-            Join Room
-          </button>
-          {error && <p className="error-message">{error}</p>}
-        </form>
-      </div>
-    </div>
-  );
+    return (
+        <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
+            <h2>Join Auction Room</h2>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="roomCode">Room Code</label>
+                    <input
+                        type="text"
+                        id="roomCode"
+                        value={roomCode}
+                        onChange={(e) => setRoomCode(e.target.value)}
+                        required
+                        placeholder="Enter Room Code"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        placeholder="Enter Room Password"
+                    />
+                </div>
+                <button type="submit">Join Room</button>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+            </form>
+        </div>
+    );
 };
 
 export default JoinRoom;

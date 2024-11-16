@@ -13,10 +13,18 @@ const Room = () => {
   const [newBid, setNewBid] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [product, setProduct] = useState(null); // State for product data
+  const [winner, setWinner] = useState(null); // New state to store winner details
   const timerRef = useRef(null);
   const wsRef = useRef(null);
 
   useEffect(() => {
+    // Fetch product data from localStorage
+    const products = JSON.parse(localStorage.getItem("products")) || [];
+    const productData = products[0];
+    setProduct(productData);
+
+    // Set up WebSocket connection
     wsRef.current = new WebSocket("ws://localhost:8080");
     wsRef.current.onopen = () => console.log("WebSocket connection established");
     wsRef.current.onmessage = (event) => {
@@ -27,6 +35,7 @@ const Room = () => {
       }
     };
     wsRef.current.onclose = () => console.log("WebSocket connection closed");
+
     return () => wsRef.current.close();
   }, [roomId]);
 
@@ -98,6 +107,9 @@ const Room = () => {
   const endAuction = () => {
     setAuctionEnded(true);
     clearInterval(timerRef.current);
+    if (highestBidder !== "No bids yet") {
+      setWinner({ name: highestBidder, bid: highestBid });
+    }
   };
 
   return (
@@ -113,7 +125,23 @@ const Room = () => {
         <p>Password: {password}</p>
       </div>
 
-      <div className={styles.productBox}>Product Information Here</div>
+      {/* Display product details if available */}
+      {product ? (
+        <div className={styles.productBox}>
+          <div className={styles.imageContainer}>
+            <img src={product.image} alt="Product" />
+          </div>
+          <div className={styles.productDetails}>
+            <h3>Title: {product.title}</h3>
+            <p>Description: {product.description}</p>
+            <p>Category: {product.category}</p>
+            <p>Starting Price: ${product.starting_price}</p>
+            {product.reserve_price && <p>Reserve Price: ${product.reserve_price}</p>}
+          </div>
+        </div>
+      ) : (
+        <div>Loading product data...</div>
+      )}
 
       <div className={styles.timer}>
         <p>Auction Room ends in: {formatTime(timeLeft)}</p>
@@ -132,6 +160,9 @@ const Room = () => {
         <button onClick={placeBid} disabled={auctionEnded || !newBid}>
           Place Bid
         </button>
+        <button onClick={endAuction} disabled={auctionEnded}>
+          End Auction
+        </button>
       </div>
 
       <div className={styles.joinedUsers}>
@@ -143,7 +174,12 @@ const Room = () => {
         </ul>
       </div>
 
-      {auctionEnded && <div className={styles.auctionEnded}>Auction Ended!</div>}
+      {auctionEnded && winner && (
+        <div className={styles.auctionEnded}>
+          Auction Ended! Winner: {winner.name} with a bid of ${winner.bid}
+        </div>
+      )}
+      {auctionEnded && !winner && <div className={styles.auctionEnded}>No winner declared!</div>}
     </div>
   );
 };

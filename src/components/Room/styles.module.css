@@ -16,7 +16,7 @@
     top: 20px;
     font-size: 36px;
     font-family: "Courier New", Courier, monospace;
-    color: #FFD700;
+    color: #fff;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
     animation: fadeIn 1.5s ease-in-out;
 }
@@ -82,9 +82,9 @@
 }
 
 .productBox {
-    width: 400px;
+    width: 1000px;
     height: 400px;
-    background-color: #fff;
+    background-color: #ffffff;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -112,6 +112,7 @@
     color: #fff;
     text-align: center;
     transition: transform 0.2s;
+   
 }
 .joinedUsers:hover {
     transform: scale(1.05);
@@ -123,6 +124,49 @@
     font-weight: bold;
     margin-top: 20px;
 }
+.productBox {
+    display: flex;
+    gap: 20px;
+    background-color: #fdfeff;
+    ;
+    border-radius: 10px;
+    padding: 20px;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: left;
+  }
+  
+  .imageContainer {
+    flex: 0 0 200px;
+    height: 600px;
+    width: 600px;
+    overflow: hidden;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .imageContainer img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  
+  .productDetails {
+    flex: 1;
+    font-size: 18px;
+    color: #000;
+  }
+  .auctionEnded {
+    font-size: 24px;
+    color: green;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  
 
 @keyframes fadeIn {
     0% { opacity: 0; transform: translateY(-10px); }
