@@ -47,21 +47,22 @@ const App = () => {
 
         <Route path="/create-room" element={<CreateRoom />} />
 
-        <Route path="/add-product" element={<AddProduct />} /> {/* Add this route */}
+        <Route path="/add-product" element={<AddProduct />} /> 
         
         <Route path="/room/:roomId" element={<Room />} /> {/* Room page route */}
 
-        <Route path="/Join-Room" element={<Room />} /> {/* Room page route */}
+        <Route path="/tenders-live" element={<Room />} /> 
+        <Route path="/join-Room" element={<JoinRoom />} /> 
 
         
 
         {/* Dynamic Service Page */}
-        <Route path="/services/:serviceName" element={<CreateRoom />} />
+        {/* <Route path="/services/:serviceName" element={<CreateRoom />} /> */}
 {/* 
-       <Route path="/tenders-live" element={<TendersLive />} />
-        <Route path="/create-room" element={<CreateRoom />} />
-        <Route path="/add-product" element={<AddProduct />} />
-        <Route path="/join-room" element={<JoinRoom />} /> */}
+        <Route path="/tenders-live" element={<TendersLive />} />
+      //   <Route path="/create-room" element={<CreateRoom />} />
+      //   <Route path="/add-product" element={<AddProduct />} />
+      //   <Route path="/join-room" element={<JoinRoom />} /> */}
       </Routes>
     </BrowserRouter>
   );
