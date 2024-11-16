@@ -1,41 +1,30 @@
+const bcrypt = require("bcrypt");
+const RegisterModel = require("../models/user.model");
 const { jwtgenerate } = require("../middlewares/jwt");
-const RegisterModel = require("../models/user.model")
-const bcrypt = require('bcrypt');
 
-const loginUser = async (req, res,next) => {
-    console.log(req.body);
+const loginUser = async (req, res, next) => {
+  try {
+    const { userId, password } = req.body;
 
-    const { email, password } = req.body
+    // Find user by userId
+    const user = await RegisterModel.findOne({ "personalDetails.userId": userId });
 
-
-    const user = await RegisterModel.find({ "personalDetails.email": email });
-
-    console.log(user);
-    if (user.length == 0) {
-        const err=new Error("user not found");
-        err.statusCode=404;
-        next(err);
-        //res.send('User Not Found')
-    }
-    else {
-        console.log(password);
-        console.log(user[0].personalDetails.password);
-        bcrypt.compare(password, user[0].personalDetails.password, function (err, result) {
-            if (err) {
-                res.send('Hash not generated')
-                return
-            }
-            else if (result) {
-                var token = jwtgenerate(user[0].personalDetails.name)
-                console.log(token)
-                res.send({ message: "Login Successfull", token: token })
-            }
-            else {
-                res.send("Login Failed Either username or password is incorrect")
-            }
-        });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
+    // Compare hashed passwords
+    const isMatch = await bcrypt.compare(password, user.personalDetails.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid userId or password" });
+    }
 
-}
-module.exports = loginUser
+    // Generate JWT token
+    const token = jwtgenerate(user.personalDetails.userId);
+    res.status(200).json({ message: "Login Successful", token });
+  } catch (error) {
+    next(error); // Pass error to the error-handling middleware
+  }
+};
+
+module.exports = loginUser;

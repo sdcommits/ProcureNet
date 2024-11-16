@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import jwt_decode from "jwt-decode"; // Import jwt-decode to decode the JWT
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -34,15 +35,44 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/add-product", formData, {
+      // Retrieve the JWT token from localStorage
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You are not logged in. Please log in first.");
+        navigate("/login");
+        return;
+      }
+
+      // Decode the JWT token to extract the userId
+      const decoded = jwt_decode(token);
+      const userId = decoded.userId; // Ensure this is the correct field in your token
+
+      // Include the userId in the formData
+      const productData = { ...formData, seller: userId };
+
+      // Debug log to check productData
+      console.log("Product data to be stored:", productData);
+
+      // Retrieve current products from localStorage
+      const currentProducts = JSON.parse(localStorage.getItem("products")) || [];
+      console.log("Current products in localStorage:", currentProducts);
+
+      // Update localStorage with the new product
+      const updatedProducts = [...currentProducts, productData];
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
+
+      // Confirm storage operation
+      console.log("Updated products in localStorage:", JSON.parse(localStorage.getItem("products")));
+
+      // Optionally, send the product data to the backend
+      const response = await axios.post("http://localhost:8080/api/add-product", productData, {
         headers: { "Content-Type": "application/json" },
       });
+
+      console.log("Server response:", response.data);
       alert("Product added successfully!");
 
-      // Save the full product object to localStorage
-      const currentProducts = JSON.parse(localStorage.getItem("products")) || [];
-      localStorage.setItem("products", JSON.stringify([...currentProducts, formData]));
-
+      // Navigate to the live room creation page
       navigate("/create-room");
     } catch (error) {
       console.error("Error adding product:", error.response?.data || error.message);

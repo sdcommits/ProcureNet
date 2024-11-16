@@ -1,69 +1,69 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+'use client'
 
-const JoinRoom = () => {
-    const [roomCode, setRoomCode] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
+import { useState } from 'react'
+import styles from './styles.module.css'
 
-    // Handler for the form submission
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError(null); // Reset error state
+export default function JoinRoom() {
+  const [roomCode, setRoomCode] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(null)
 
-        try {
-            // Make a request to the backend to verify room code and password
-            const response = await axios.post('/api/auction/join', {
-                roomCode,
-                password,
-            });
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError(null)
 
-            if (response.data.success) {
-                // Redirect to the auction room if successful
-                navigate(`/auction-room/${roomCode}`);
-            } else {
-                // Show error if authentication fails
-                setError(response.data.message || 'Invalid room code or password');
-            }
-        } catch (err) {
-            setError('Error joining the room. Please try again later.');
-            console.error(err);
-        }
-    };
+    // Simulating API call
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
-    return (
-        <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
-            <h2>Join Auction Room</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="roomCode">Room Code</label>
-                    <input
-                        type="text"
-                        id="roomCode"
-                        value={roomCode}
-                        onChange={(e) => setRoomCode(e.target.value)}
-                        required
-                        placeholder="Enter Room Code"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        placeholder="Enter Room Password"
-                    />
-                </div>
-                <button type="submit">Join Room</button>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-            </form>
-        </div>
-    );
-};
+    // For demonstration, always show error
+    setError('Invalid room code or password')
+  }
 
-export default JoinRoom;
+  return (
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h2 className={styles.title}>Join Auction Room</h2>
+        <p className={styles.description}>Enter the room code and password to join</p>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.inputGroup}>
+            <label htmlFor="roomCode" className={styles.label}>Room Code</label>
+            <input
+              id="roomCode"
+              type="text"
+              placeholder="Enter Room Code"
+              value={roomCode}
+              onChange={(e) => setRoomCode(e.target.value)}
+              required
+              className={styles.input}
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="password" className={styles.label}>Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter Room Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className={styles.input}
+            />
+          </div>
+          <button type="submit" className={styles.button}>
+            Join Room
+          </button>
+        </form>
+        {error && (
+          <div className={styles.error}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.icon}>
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <p>{error}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

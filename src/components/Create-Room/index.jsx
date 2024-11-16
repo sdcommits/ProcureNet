@@ -44,6 +44,17 @@ const CreateAuctionRoom = () => {
     navigate("/add-product");
   };
 
+  const handleRemoveProduct = (productToRemove) => {
+    // Filter out the product to remove from the products array
+    const updatedProducts = products.filter(product => product !== productToRemove);
+
+    // Update localStorage
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
+
+    // Update state
+    setProducts(updatedProducts);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // Set loading state to true before making the API call
@@ -62,7 +73,7 @@ const CreateAuctionRoom = () => {
 
         if (room_Id) {
           alert("Auction Room Created Successfully!");
-          localStorage.removeItem("products");
+         
           localStorage.removeItem("createAuctionRoomData"); // Clear form data on successful creation
 
           navigate(`/room/${room_Id}`);
@@ -213,13 +224,21 @@ const CreateAuctionRoom = () => {
             </button>
           </div>
 
-          {/* Display Products */}
+          {/* Display Products with Remove Button */}
           {products.length > 0 && (
             <div className={styles.product_list}>
               <h3>Added Products:</h3>
               <ul>
                 {products.map((product, index) => (
-                  <li key={index}>{product.title}</li>
+                  <li key={index}>
+                    {product.title}
+                    <button
+                      className={styles.remove_product_btn}
+                      onClick={() => handleRemoveProduct(product)}
+                    >
+                      Cut
+                    </button>
+                  </li>
                 ))}
               </ul>
             </div>

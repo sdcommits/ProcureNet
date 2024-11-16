@@ -46,7 +46,7 @@ const Signup = () => {
             const { data: res } = await axios.post(url, requestData);
 
             console.log(res.message);
-            navigate("/");  // Redirect to Main page on successful registration
+            navigate("/login");  // Redirect to Main page on successful registration
         } catch (error) {
             if (error.response && error.response.status >= 400 && error.response.status <= 500) {
                 setError(error.response.data.message);
