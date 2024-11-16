@@ -16,11 +16,10 @@ const CreateAuctionRoom = () => {
   });
 
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false); // Loading state to prevent multiple submits
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Load products from localStorage
     const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
     setProducts(storedProducts);
 
