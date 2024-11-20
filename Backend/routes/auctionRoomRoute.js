@@ -10,4 +10,5 @@ router.get('/auction-rooms', auctionRoomController.getAuctionRooms);
 
 
 router.get('/auction-rooms/:id', auctionRoomController.getAuctionRoomById);
+router.put('/auction-rooms/:id', auctionRoomController.updateHighestBid);
 module.exports = router;

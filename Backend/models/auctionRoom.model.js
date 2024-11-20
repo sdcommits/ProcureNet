@@ -54,7 +54,7 @@ const auctionRoomSchema = new mongoose.Schema({
     },
     joinedUsers: {
         type: [String], // Array of usernames
-        default: ['user1','user2'],
+        default: [],
     },
     createdAt: {
         type: Date,

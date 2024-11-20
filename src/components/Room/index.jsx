@@ -11,37 +11,67 @@ const Room = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [auctionEnded, setAuctionEnded] = useState(false);
   const [newBid, setNewBid] = useState("");
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState("Anonymous"); // Set a default userName
   const [password, setPassword] = useState("");
   const [product, setProduct] = useState(null); // State for product data
   const [winner, setWinner] = useState(null); // New state to store winner details
   const timerRef = useRef(null);
   const wsRef = useRef(null);
 
+  // Debugging roomId
+  useEffect(() => {
+    console.log("Room ID from useParams:", roomId); // Make sure roomId is not undefined
+  }, [roomId]);
+
   useEffect(() => {
     // Fetch product data from localStorage
     const products = JSON.parse(localStorage.getItem("products")) || [];
     const productData = products[0];
     setProduct(productData);
+    // console.log(roomId);
+
+    // Check if roomId is available before setting up WebSocket
+    if (!roomId) {
+      console.error("Room ID is not available!");
+      return;
+    }
 
     // Set up WebSocket connection
     wsRef.current = new WebSocket("ws://localhost:8080");
-    wsRef.current.onopen = () => console.log("WebSocket connection established");
+    wsRef.current.onopen = () => {
+      console.log("WebSocket connection established");
+      // Notify server of the new user joining
+      wsRef.current.send(
+        JSON.stringify({
+          type: "newUser",
+          userName,
+          roomId, // Make sure roomId is included here
+        })
+      );
+    };
     wsRef.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "newBid" && data.roomId === roomId) {
         setHighestBid(data.bidAmount);
         setHighestBidder(data.userName);
+      } else if (data.type === "newUser") {
+        setJoinedUsers((prevUsers) => [...prevUsers, data.userName]);
       }
     };
     wsRef.current.onclose = () => console.log("WebSocket connection closed");
 
     return () => wsRef.current.close();
-  }, [roomId]);
+  }, [roomId, userName]); // Adding userName here to ensure it's initialized
 
   useEffect(() => {
     const fetchAuctionData = async () => {
       try {
+        // console.log(roomId);
+        if (!roomId) {
+          console.error("Room ID is not defined for API request!");
+          return;
+        }
+        
         const response = await fetch(`http://localhost:8080/api/auction/auction-rooms/${roomId}`);
         if (response.ok) {
           const data = await response.json();
@@ -57,8 +87,9 @@ const Room = () => {
         console.error("Error fetching auction data:", error);
       }
     };
+
     fetchAuctionData();
-  }, [roomId]);
+  }, [roomId]); // Ensure roomId is available before making the request
 
   useEffect(() => {
     if (timerRef.current) {
@@ -85,19 +116,33 @@ const Room = () => {
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
-  const placeBid = () => {
+  const placeBid = async () => {
     const bidAmount = parseFloat(newBid);
     if (bidAmount > highestBid) {
-      setHighestBid(bidAmount);
-      setHighestBidder(userName || "Anonymous");
-      wsRef.current.send(
-        JSON.stringify({
-          type: "newBid",
-          bidAmount,
-          userName,
-          roomId,
-        })
-      );
+      try {
+        const response = await fetch(`http://localhost:8080/api/auction/auction-rooms/${roomId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ highestBid: bidAmount, highestBidder: userName }),
+        });
+
+        if (response.ok) {
+          setHighestBid(bidAmount);
+          setHighestBidder(userName || "Anonymous");
+          wsRef.current.send(
+            JSON.stringify({
+              type: "newBid",
+              bidAmount,
+              userName,
+              roomId, // Send roomId with the bid
+            })
+          );
+        } else {
+          console.error("Failed to update bid on server.");
+        }
+      } catch (error) {
+        console.error("Error placing bid:", error);
+      }
     } else {
       alert("Bid must be higher than the current highest bid.");
     }
