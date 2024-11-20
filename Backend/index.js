@@ -1,90 +1,114 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const http = require('http');
+const WebSocket = require('ws');
 const main = require('./db');
 const registerRouter = require('./routes/user.registerRoute');
 const loginRouter = require('./routes/user.loginRoute');
 const auctionRoomRoutes = require('./routes/auctionRoomRoute');
-const productRoutes = require('./routes/productRoutes'); 
-const http = require('http');
-const WebSocket = require('ws');
+const productRoutes = require('./routes/productRoutes');
+const AuctionRoom = require('./models/auctionRoom.model'); // Add AuctionRoom model
 
-// Load environment variables from .env file
+// Load environment variables
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app); // Use http server to integrate with WebSocket
-const wss = new WebSocket.Server({ server }); // WebSocket server
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
-// Enable CORS for cross-origin requests
+// Middleware
 app.use(cors());
-
-// Middleware to parse JSON request bodies
 app.use(express.json());
 
-// Route definitions
-app.use('/api/auction', auctionRoomRoutes); 
+// Routes
+app.use('/api/auction', auctionRoomRoutes);
 app.use('/login', loginRouter);
 app.use('/signup', registerRouter);
 app.use('/api', productRoutes);
 
-// Basic route to verify server is running
 app.get('/', (req, res) => {
-    res.send("This is the homepage");
+  res.send("Welcome to the Auction System API!");
 });
 
 // WebSocket Connection Handling
 wss.on('connection', (ws) => {
-    console.log('New client connected');
-    
-    ws.on('message', (message) => {
+    console.log('New WebSocket client connected');
+  
+    ws.on('message', async (message) => {
+      try {
         const data = JSON.parse(message);
-
+  
         if (data.type === 'newBid') {
-            // Broadcast the new bid to all clients
-            broadcast(JSON.stringify({
-                type: 'newBid',
-                bidAmount: data.bidAmount,
-                bidder: data.bidder,
-            }));
-        } else if (data.type === 'auctionEnd') {
-            // Notify all clients that the auction has ended
-            broadcast(JSON.stringify({
-                type: 'auctionEnd',
-                roomId: data.roomId,
-            }));
+          // Update highest bid and bidder in the database
+          // Ensure the filter is an object, with roomId as a key
+          
+          await AuctionRoom.findOneAndUpdate(
+            { roomId: data.roomId },  // Proper filter format
+            {
+              highestBid: data.bidAmount,
+              highestBidder: data.bidder,
+            }
+          );
+  
+          // Broadcast the updated bid
+          broadcast({
+            type: 'newBid',
+            roomId: data.roomId,
+            bidAmount: data.bidAmount,
+            bidder: data.bidder,
+          });
+        } else if (data.type === 'newUser') {
+            console.log(data);
+          // Add new user to joinedUsers in the database
+          const room = await AuctionRoom.findOne({ roomId: data.roomId }); // Ensure the filter is an object
+          if (room && !room.joinedUsers.includes(data.username)) {
+            room.joinedUsers.push(data.username);
+            await room.save();
+  
+            // Broadcast notification for new user joining
+            broadcast({
+              type: 'newUser',
+              roomId: data.roomId,
+              username: data.username,
+            });
+          }
         }
+      } catch (error) {
+        console.error('Error processing WebSocket message:', error.message);
+      }
     });
-
+  
     ws.on('close', () => {
-        console.log('Client disconnected');
+      console.log('WebSocket client disconnected');
     });
-});
-
-// Function to broadcast messages to all connected clients
-const broadcast = (message) => {
+  });
+  
+  // Broadcast function
+  const broadcast = (data) => {
     wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(message);
-        }
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(data));
+      }
     });
-};
+  };
+  
 
-// Global error handling middleware
+// Global error handling
 app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    res.status(statusCode).json({
-        message: err.message || 'Internal Server Error',
-    });
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    error: err.message || 'Internal Server Error',
+  });
 });
 
-// Start the server and initialize database connection
+// Start server
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, async () => {
-    try {
-        await main(); // Connect to the database
-        console.log(`Server running on port ${PORT}`);
-    } catch (error) {
-        console.error('Database connection failed:', error);
-    }
+  try {
+    await main();
+    console.log(`Server running on http://localhost:${PORT}`);
+  } catch (error) {
+    console.error('Failed to connect to the database:', error.message);
+  }
 });
