@@ -1,15 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import styles from "./styles.module.css";
 import herobg from "../../assets/herobg.png"; // Import the background image
 
 const Login = () => {
   const [data, setData] = useState({
-    email: "",
+    userId: "",
     password: "",
   });
   const [error, setError] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  useEffect(() => {
+    // Check if token exists in localStorage
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true); // User is already logged in
+    }
+  }, []);
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
@@ -19,25 +29,40 @@ const Login = () => {
     e.preventDefault();
     try {
       const url = "http://localhost:8080/login";
-      const { data: res } = await axios.post(url, data);
-      localStorage.setItem("token", res.data); // Save token
-      window.location.href = "/"; // Redirect to homepage
+      const response = await axios.post(url, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      localStorage.setItem("token", response.data.token); // Save token
+      navigate("/"); // Redirect to homepage using useNavigate
     } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status <= 500
-      ) {
-        setError(error.response.data.message); // Show error message
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message); // Display backend error
+      } else {
+        setError("An unexpected error occurred."); // Handle unexpected errors
       }
     }
   };
 
-  return (
+  return isLoggedIn ? (
+    <div className={styles.already_logged_in}>
+      {/* Pop-up message */}
+      <div className={styles.popup}>
+        <p>User already logged in!</p>
+        <button
+          className={styles.redirect_btn}
+          onClick={() => navigate("/")} // Redirect to homepage or dashboard
+        >
+          Go to Homepage
+        </button>
+      </div>
+    </div>
+  ) : (
     <div
       className={styles.login_container}
       style={{
-        backgroundImage: `url(${herobg})`, // Set the background image
+        backgroundImage: `url(${herobg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -50,10 +75,10 @@ const Login = () => {
             <div className={styles.input_container}>
               <input
                 type="text"
-                placeholder="Email/Phone Number"
-                name="email"
+                placeholder="Registration ID"
+                name="userId"
                 onChange={handleChange}
-                value={data.email}
+                value={data.userId}
                 required
                 className={styles.input}
               />
@@ -77,21 +102,19 @@ const Login = () => {
 
             {error && <div className={styles.error_msg}>{error}</div>}
 
-            {/* Submit Button */}
             <button type="submit" className={styles.submit_btn}>
               Submit
             </button>
 
-            {/* Forgot Password Link */}
             <Link to="/forgotpassword" className={styles.forgot_password_link}>
               Forgot Password?
             </Link>
           </form>
         </div>
         <div className={styles.right}>
-          <div className={styles.new_here_container}> {/* Container for "New Here?" and button */}  
-            <div className={styles.vertical_line}></div> {/* Vertical line */}
-            <div className={styles.text_container}> {/* Text and button aligned vertically */}
+          <div className={styles.new_here_container}>
+            <div className={styles.vertical_line}></div>
+            <div className={styles.text_container}>
               <h1 className={styles.new_here}>New Here?</h1>
               <Link to="/signup">
                 <button type="button" className={styles.signup_btn}>

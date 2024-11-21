@@ -1,24 +1,27 @@
-const express = require('express');
-const jwt = require(`jsonwebtoken`);
+const jwt = require("jsonwebtoken");
 
-const jwtverify = (req,res,next)=>{
-    const token = req.headers.authorization.split(' ')[1];
-    if(!token){
-        return res.send("Token not found")
-    }
-    else{
-        try{
-            var decoded = jwt.verify(token,process.env.JWTKEY);
-            res.user = decoded.name;
-            next();
+// Middleware to verify JWT
+const jwtverify = (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-        }
-        catch(error){
-            res.redirect('/');
-        }
-    }
-}
-const jwtgenerate = (username)=>{
-    return jwt.sign({name:username},process.env.JWTKEY);
-}
-module.exports = { jwtgenerate, jwtverify }
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Token not provided or invalid" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWTKEY);
+    req.user = { userId: decoded.userId }; // Attach userId to the request object
+    next(); // Continue to the next middleware or route handler
+  } catch (error) {
+    return res.status(403).json({ message: "Token is invalid or expired" });
+  }
+};
+
+// Function to generate JWT using user_id
+const jwtgenerate = (userId) => {
+  return jwt.sign({ userId }, process.env.JWTKEY, { expiresIn: "1h" });
+};
+
+module.exports = { jwtgenerate, jwtverify };

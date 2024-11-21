@@ -4,10 +4,13 @@ import Main from "./components/Main";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import ForgotPassword from "./components/ForgotPassword";
-import CreateRoom from "./components/Create-Room";
+
 import AddProduct from "./components/AddProduct"; // Import AddProduct component
 import Room from "./components/Room";
-import JoinRoom from  "./components/Join-Room";
+
+import Services from "./components/ServiceCard";
+import JoinRoom from "./components/Join-Room";
+import CreateRoom from "./components/Create-Room";
 
 const App = () => {
   const user = localStorage.getItem("token");
@@ -45,24 +48,20 @@ const App = () => {
 
         <Route path="/forgotpassword" element={<ForgotPassword />} />
 
-        <Route path="/create-room" element={<CreateRoom />} />
+        {/* Add Product page */}
+        <Route path="/add-product" element={<AddProduct />} />
 
-        <Route path="/add-product" element={<AddProduct />} /> 
-        
-        <Route path="/room/:roomId" element={<Room />} /> {/* Room page route */}
+        {/* Create Auction Room page */}
+        <Route path="/create-room" element={<CreateRoom />} /> 
 
-        <Route path="/tenders-live" element={<Room />} /> 
-        <Route path="/join-Room" element={<JoinRoom />} /> 
+        {/* Room page route */}
+        <Route path="/room/:roomId" element={<Room />} /> 
 
-        
+        {/* Join Room page */}
+        <Route path="/join-room" element={<JoinRoom />} />
 
-        {/* Dynamic Service Page */}
-        {/* <Route path="/services/:serviceName" element={<CreateRoom />} /> */}
-{/* 
-        <Route path="/tenders-live" element={<TendersLive />} />
-      //   <Route path="/create-room" element={<CreateRoom />} />
-      //   <Route path="/add-product" element={<AddProduct />} />
-      //   <Route path="/join-room" element={<JoinRoom />} /> */}
+        {/* Services Page */}
+        <Route path="/services" element={<Services />} />
       </Routes>
     </BrowserRouter>
   );
