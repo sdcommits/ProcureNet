@@ -9,6 +9,7 @@ const loginRouter = require('./routes/user.loginRoute');
 const auctionRoomRoutes = require('./routes/auctionRoomRoute');
 const productRoutes = require('./routes/productRoutes');
 const AuctionRoom = require('./models/auctionRoom.model'); // Add AuctionRoom model
+const Product = require('./models/product.model'); // Add Product model
 
 // Load environment variables
 dotenv.config();
@@ -31,68 +32,101 @@ app.get('/', (req, res) => {
   res.send("Welcome to the Auction System API!");
 });
 
+// Create a map to store room-specific connections
+const roomConnections = new Map();
+
 // WebSocket Connection Handling
 wss.on('connection', (ws) => {
-    console.log('New WebSocket client connected');
-  
-    ws.on('message', async (message) => {
-      try {
-        const data = JSON.parse(message);
-  
-        if (data.type === 'newBid') {
-          // Update highest bid and bidder in the database
-          // Ensure the filter is an object, with roomId as a key
-          
+  console.log('Client connected');
+  let clientRoomCode = null;
+
+  ws.on('message', async (message) => {
+    try {
+      const data = JSON.parse(message);
+      console.log('Received:', data);
+
+      switch (data.type) {
+        case 'joinRoom':
+          clientRoomCode = data.roomCode;
+          if (!roomConnections.has(clientRoomCode)) {
+            roomConnections.set(clientRoomCode, new Set());
+          }
+          roomConnections.get(clientRoomCode).add(ws);
+
+          // Fetch current room state and send to the new client
+          const room = await AuctionRoom.findOne({ roomCode: clientRoomCode });
+          if (room) {
+            ws.send(JSON.stringify({
+              type: 'roomState',
+              roomCode: clientRoomCode,
+              highestBid: room.highestBid,
+              highestBidder: room.highestBidder,
+              timeLeft: Math.max(0, new Date(room.endTime) - new Date()),
+              joinedUsers: room.joinedUsers
+            }));
+          }
+          break;
+
+        case 'newBid':
+          // Update the database
           await AuctionRoom.findOneAndUpdate(
-            { roomId: data.roomId },  // Proper filter format
-            {
+            { roomCode: data.roomCode },
+            { 
               highestBid: data.bidAmount,
-              highestBidder: data.bidder,
+              highestBidder: data.userName
             }
           );
-  
-          // Broadcast the updated bid
-          broadcast({
-            type: 'newBid',
-            roomId: data.roomId,
-            bidAmount: data.bidAmount,
-            bidder: data.bidder,
-          });
-        } else if (data.type === 'newUser') {
-            console.log(data);
-          // Add new user to joinedUsers in the database
-          const room = await AuctionRoom.findOne({ roomId: data.roomId }); // Ensure the filter is an object
-          if (room && !room.joinedUsers.includes(data.username)) {
-            room.joinedUsers.push(data.username);
-            await room.save();
-  
-            // Broadcast notification for new user joining
-            broadcast({
-              type: 'newUser',
-              roomId: data.roomId,
-              username: data.username,
+
+          // Broadcast to all clients in the same room
+          if (roomConnections.has(data.roomCode)) {
+            roomConnections.get(data.roomCode).forEach((client) => {
+              if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({
+                  type: 'bidUpdate',
+                  roomCode: data.roomCode,
+                  bidAmount: data.bidAmount,
+                  userName: data.userName,
+                  timestamp: new Date()
+                }));
+              }
             });
           }
-        }
-      } catch (error) {
-        console.error('Error processing WebSocket message:', error.message);
+          break;
+
+        case 'syncTime':
+          if (roomConnections.has(data.roomCode)) {
+            const room = await AuctionRoom.findOne({ roomCode: data.roomCode });
+            if (room) {
+              roomConnections.get(data.roomCode).forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                  client.send(JSON.stringify({
+                    type: 'timeSync',
+                    roomCode: data.roomCode,
+                    serverTime: new Date(),
+                    endTime: room.endTime,
+                    timeLeft: Math.max(0, new Date(room.endTime) - new Date())
+                  }));
+                }
+              });
+            }
+          }
+          break;
       }
-    });
-  
-    ws.on('close', () => {
-      console.log('WebSocket client disconnected');
-    });
+    } catch (error) {
+      console.error('WebSocket error:', error);
+    }
   });
-  
-  // Broadcast function
-  const broadcast = (data) => {
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(data));
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+    if (clientRoomCode && roomConnections.has(clientRoomCode)) {
+      roomConnections.get(clientRoomCode).delete(ws);
+      if (roomConnections.get(clientRoomCode).size === 0) {
+        roomConnections.delete(clientRoomCode);
       }
-    });
-  };
-  
+    }
+  });
+});
 
 // Global error handling
 app.use((err, req, res, next) => {

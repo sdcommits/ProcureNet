@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const productController = require('../controllers/productController'); // Ensure the path is correct
-
-// Route to add a product
+const productController = require('../controllers/productController');
 router.post('/add-product', productController.addProduct);
+
+router.get('/products', productController.getProducts);
 
 module.exports = router;

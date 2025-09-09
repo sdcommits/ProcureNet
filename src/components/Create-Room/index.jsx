@@ -13,11 +13,13 @@ const CreateAuctionRoom = () => {
     minbid_increment: 1,
     start_time: "",
     room_password: "",
+    selectedProducts: []
   });
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false); // Loading state to prevent multiple submits
   const navigate = useNavigate();
+  const [availableProducts, setAvailableProducts] = useState([]);
 
   useEffect(() => {
     // Load products from localStorage
@@ -29,9 +31,22 @@ const CreateAuctionRoom = () => {
     if (savedFormData) {
       setFormData(savedFormData);
     }
+
+    // Fetch available products
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/products");
+        setAvailableProducts(response.data.filter(product => !product.auction_room));
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   const handleChange = (e) => {
+    console.log(e.target.name, e.target.value);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -55,9 +70,20 @@ const CreateAuctionRoom = () => {
     setProducts(updatedProducts);
   };
 
+  const handleProductSelection = (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+    console.log(selectedOptions);
+    setFormData(prev => ({
+      ...prev,
+      selectedProducts: selectedOptions
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading state to true before making the API call
+    setLoading(true);
+
+    console.log(formData);
 
     try {
       const response = await axios.post("http://localhost:8080/api/auction/create-room", {
@@ -67,27 +93,24 @@ const CreateAuctionRoom = () => {
 
       console.log("Response from backend:", response);
 
-      // Check if response contains the room ID
-      if (response && response.data && response.data.auctionRoom) {
-        const room_Id = response.data.room_Id;
-
-        if (room_Id) {
-          alert("Auction Room Created Successfully!");
-         
-          localStorage.removeItem("createAuctionRoomData"); // Clear form data on successful creation
-
-          navigate(`/room/${room_Id}`);
-        } else {
-          alert("Room ID not found in response!");
-        }
+      // Check if response contains the roomCode
+      if (response && response.data && response.data.roomCode) {
+        const roomCode = response.data.roomCode;
+        alert("Auction Room Created Successfully!");
+        
+        // Clear form data from localStorage
+        localStorage.removeItem("createAuctionRoomData");
+        
+        // Navigate to the room using the roomCode
+        navigate(`/room/${roomCode}`);
       } else {
-        alert("Failed to create auction room. Please try again.");
+        alert("Room Code not found in response. Please try again.");
       }
     } catch (error) {
       console.error("Error creating room:", error.response?.data?.message || error.message);
       alert("Error creating room. Please try again.");
     } finally {
-      setLoading(false); // Reset loading state after the request is completed
+      setLoading(false);
     }
   };
 
@@ -218,14 +241,14 @@ const CreateAuctionRoom = () => {
           </div>
 
           {/* Add Product Section */}
-          <div className={styles.product_input_container}>
+          {/* <div className={styles.product_input_container}>
             <button type="button" className={styles.add_product_btn} onClick={handleAddProduct}>
               Add Product
             </button>
-          </div>
+          </div> */}
 
           {/* Display Products with Remove Button */}
-          {products.length > 0 && (
+          {/* {products.length > 0 && (
             <div className={styles.product_list}>
               <h3>Added Products:</h3>
               <ul>
@@ -242,7 +265,30 @@ const CreateAuctionRoom = () => {
                 ))}
               </ul>
             </div>
-          )}
+          )} */}
+
+          {/* Select Products */}
+          <div className={styles.input_group}>
+            <div className={styles.input_container}>
+              <label>
+                Select Products:
+                <select
+                  multiple
+                  name="selectedProducts"
+                  value={formData.selectedProducts}
+                  onChange={handleProductSelection}
+                  required
+                  className={styles.input}
+                >
+                  {availableProducts.map(product => (
+                    <option key={product._id} value={product._id}>
+                      {product.title} - ${product.starting_price}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
 
           {/* Create Room Button */}
           <div className={styles.submit_btn_container}>

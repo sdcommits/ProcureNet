@@ -11,6 +11,7 @@ import Room from "./components/Room";
 import Services from "./components/ServiceCard";
 import JoinRoom from "./components/Join-Room";
 import CreateRoom from "./components/Create-Room";
+import Products from "./components/Products";
 
 const App = () => {
   const user = localStorage.getItem("token");
@@ -62,6 +63,8 @@ const App = () => {
 
         {/* Services Page */}
         <Route path="/services" element={<Services />} />
+
+        <Route path="/products" element={<Products />} />
       </Routes>
     </BrowserRouter>
   );
